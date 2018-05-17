@@ -1,8 +1,13 @@
 <template>
 
-    <div>
-        <div class="upload-list" v-if="tableData.length > 0">
-            <table>
+    <div class="row">
+        <p class="text-right">
+            <button class="btn btn-primary" @click="open('login')">登陆</button>
+            <button class="btn btn-success" @click="open('upload')">上传</button>
+            <button class="btn btn-info" @click="open('list')">列表</button>
+        </p>
+        <div class="col-md-12" v-if="tableData.length > 0">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <td><input type="checkbox"/></td>
@@ -24,12 +29,18 @@
                     <td>1</td>
                     <td>删除</td>
                 </tr>
+                <tr v-for="item in tableData">
+                    <td><input type="checkbox" :value="item.key"/></td>
+                    <td><img src="" alt=""></td>
+                    <td>{{item.url}}</td>
+                    <td>{{item.createTime}}</td>
+                    <td>{{item.size}}</td>
+                    <td>1</td>
+                    <td>删除</td>
+                </tr>
                 </tbody>
             </table>
         </div>
-        <button class="alt" @click="open('login')">登陆</button>
-        <button class="alt" @click="open('upload')">上传</button>
-        <button class="alt" @click="open('list')">列表</button>
     </div>
 </template>
 
@@ -61,17 +72,4 @@
 </script>
 
 <style scoped>
-    .upload-list {
-        width: auto;
-        padding: 10px;
-    }
-
-    .upload-list table {
-        width: 100%;
-    }
-
-    table td {
-        padding: 10px;
-        text-align: center;
-    }
 </style>

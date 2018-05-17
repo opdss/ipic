@@ -1,16 +1,18 @@
 <template>
-    <div>
-        <upload-cloud ref="uploadAvatar"
-                :show-upload-list="false"
-                :headers="uploadHeaders"
-                :on-success="uploadSuccess"
-                :format="['jpg','jpeg','png','gif','bmp']"
-        >
-            <p>点击或将文件拖拽到这里上传</p>
-        </upload-cloud>
-        <button class="alt" @click="open('login')">登陆</button>
-        <button class="alt" @click="open('upload')">上传</button>
-        <button class="alt" @click="open('list')">列表</button></div>
+    <div class="row">
+        <p class="text-right">
+            <button class="btn btn-primary" @click="open('login')">登陆</button>
+            <button class="btn btn-success" @click="open('upload')">上传</button>
+            <button class="btn btn-info" @click="open('list')">列表</button>
+        </p>
+        <div class="col-md-12">
+            <upload-cloud ref="uploadAvatar"
+                          :format="['jpg','jpeg','png','gif','bmp']"
+            >
+                <p>点击或将文件拖拽到这里上传</p>
+            </upload-cloud>
+        </div>
+    </div>
 </template>
 
 <script>
