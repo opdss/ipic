@@ -1,15 +1,15 @@
 <template>
     <div class="row">
-        <p class="text-right">
-            <button class="btn btn-primary" @click="open('login')">登陆</button>
-            <button class="btn btn-success" @click="open('upload')">上传</button>
-            <button class="btn btn-info" @click="open('list')">列表</button>
-        </p>
         <div class="col-md-12">
             <upload-cloud ref="uploadAvatar"
                           :format="['jpg','jpeg','png','gif','bmp']"
             >
-                <p>点击或将文件拖拽到这里上传</p>
+                <p>
+                    <span class="glyphicon glyphicon-cloud-upload" style="font-size: 48px;color:#31b0d5"></span>
+                    <br/>
+                    <br/>
+                    <span style="font-size: 16px">点击或将文件拖拽到这里上传</span>
+                </p>
             </upload-cloud>
         </div>
     </div>
@@ -23,9 +23,6 @@
             uploadCloud
         },
         methods: {
-            open (link) {
-                this.$router.push({name:link})
-            },
             upload : function () {
                 var cos = new COS(
                     {

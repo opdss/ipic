@@ -1,7 +1,9 @@
 <template>
-    <div class="upload-cloud" @click="handleClick" @drop.prevent="onDrop">
-        <input ref="input" class="upload-cloud-input" type="file" multiple @change="handleChange">
-        <slot></slot>
+    <div class="row upload-cloud" @click="handleClick" @drop.prevent="onDrop">
+        <div class="col-md-12">
+            <input ref="input" class="upload-cloud-input" type="file" multiple @change="handleChange">
+            <slot></slot>
+        </div>
     </div>
 </template>
 
@@ -66,14 +68,11 @@
 
 <style scoped>
     .upload-cloud {
-        width: auto;
-        height: 200px;
         padding: 80px 20px;
         margin: 20px;
         border: 2px dashed #DCDCDC;
-        border-radius: 10px;
+        border-radius: 3px;
         text-align: center;
-
     }
 
     .upload-cloud-input {
