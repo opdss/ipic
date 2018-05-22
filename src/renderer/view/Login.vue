@@ -42,6 +42,7 @@
 
 <script>
     const {remote} = require('electron');
+    import Queue from '../libs/fileQueue';
 
     export default {
         name: "login",
@@ -57,11 +58,20 @@
         },
         methods: {
             tencetSave (e) {
-                var fs=require('fs');
+                var q = Queue('test');
+                q.push({"a":1});
+                console.log(q);
+                console.log(q.all());
+                var q1 = Queue('test');
+                q1.push({"a":1});
+                //q1.clear();
+                console.log(q1);
+                console.log(q1.all());
+                /*var fs=require('fs');
                 let configDir = remote.app.getPath('userData');
                 console.log(configDir);
                 let cfgFile = configDir + '/account_tencet.cfg';
-                fs.writeFileSync(cfgFile, JSON.stringify(this.tencet), 'utf8');
+                fs.writeFileSync(cfgFile, JSON.stringify(this.tencet), 'utf8');*/
                 e.preventDefault();
             }
         }
