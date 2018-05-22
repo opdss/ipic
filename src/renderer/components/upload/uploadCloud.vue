@@ -1,8 +1,30 @@
 <template>
-    <div class="row upload-cloud" @click="handleClick" @drop.prevent="onDrop">
-        <div class="col-md-12">
-            <input ref="input" class="upload-cloud-input" type="file" multiple @change="handleChange">
-            <slot></slot>
+    <div>
+        <div class="row upload-cloud" @click="handleClick" @drop.prevent="onDrop">
+            <div class="col-md-12">
+                <input ref="input" class="upload-cloud-input" type="file" multiple @change="handleChange">
+                <slot></slot>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <div class="row">
+                    <div class="col-md-3 col-sm-3 col-xs-3">
+                        <div class="thumbnail"><img src="http://img.istimer.com/0.jpg"></div>
+                    </div>
+                    <div class="col-md-9 col-sm-9 col-xs-9">
+                        <div>
+                            上传成功，复制地址
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
+                                0%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </template>
@@ -68,8 +90,8 @@
 
 <style scoped>
     .upload-cloud {
-        padding: 80px 20px;
-        margin: 20px;
+        padding: 60px 20px;
+        margin: 20px 0px;
         border: 2px dashed #DCDCDC;
         border-radius: 3px;
         text-align: center;
