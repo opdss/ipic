@@ -33,7 +33,11 @@
     import COS from 'cos-js-sdk-v5';
     export default {
         name: "uploadCloud",
-
+        data(){
+          return {
+              files : []
+          }
+        },
         methods: {
             handleChange(e) {
                 console.log(e);
@@ -53,6 +57,12 @@
             },
             uploadFiles(files) {
                 console.log(files);
+                return
+
+                /*var reader = new FileReader();//新建一个FileReader
+                reader.readAsText(files[0], "UTF-8");//读取文件
+                reader.onload = function(evt){ //读取完文件之后会回来这里
+                    var fileString = evt.target.result; // 读取文件内容*/
                 /**
                  *
                  secret_id = AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk
