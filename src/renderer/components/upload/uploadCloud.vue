@@ -18,7 +18,7 @@
                         </div>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
-                                0%
+                                1%
                             </div>
                         </div>
                     </div>
@@ -61,6 +61,7 @@
             uploadFiles(files) {
                 for (var i=0;i<files.length; i++) {
                     var file = files[i]
+                    var _this = this;
                     console.log(file);
                     let fileMD5 = MD5(file);
                     if (this.files[fileMD5]) {
@@ -76,27 +77,17 @@
 
                     var obj = {
                         file : file,
-                        progress : 0,
+                        progress : {},
+                        succ : 0,
                         fileMD5 : fileMD5,
                         key : fileMD5 + '.' + fix,
                     }
-                    this.files[fileMD5] = obj
+                    _this.files[fileMD5] = obj
 
                     Up.upload(obj.key, obj.file, function (res) {
-                        console.log(11111);
-                        console.log(res);
+                        _this.files[fileMD5]['progress'] = res;
                     })
                 }
-
-                /**
-                 *
-                 secret_id = AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk
-                 secret_key = 55rPiARTHuKWWHrEMUUHp9LF0ZzCD2fA
-                 bucket = bak-1256134197
-                 region = ap-guangzhou
-
-                 * @type {*|COS}
-                 */
 
             },
             readImgFile(file){
