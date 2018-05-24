@@ -6,6 +6,12 @@
                 <h3 class="text-center">腾讯云账户</h3>
                 <form class="form-horizontal">
                     <div class="form-group">
+                        <label for="AppId" class="col-sm-2 control-label">AppId</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="AppId" v-model="tencet.SecretId" placeholder="AppId">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="SecretId" class="col-sm-2 control-label">SecretId</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="SecretId" v-model="tencet.SecretId" placeholder="SecretId">
@@ -41,8 +47,7 @@
 </template>
 
 <script>
-    const {remote} = require('electron');
-    import Queue from '../libs/fileQueue';
+    import Cfg from '../libs/config';
 
     export default {
         name: "login",
@@ -58,20 +63,7 @@
         },
         methods: {
             tencetSave (e) {
-                var q = Queue('test');
-                q.push({"a":1});
-                console.log(q);
-                console.log(q.all());
-                var q1 = Queue('test');
-                q1.push({"a":1});
-                //q1.clear();
-                console.log(q1);
-                console.log(q1.all());
-                /*var fs=require('fs');
-                let configDir = remote.app.getPath('userData');
-                console.log(configDir);
-                let cfgFile = configDir + '/account_tencet.cfg';
-                fs.writeFileSync(cfgFile, JSON.stringify(this.tencet), 'utf8');*/
+                Cfg('cloud').set('tencet', this.tencet)
                 e.preventDefault();
             }
         }

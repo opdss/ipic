@@ -18,6 +18,7 @@
 <script>
     import COS from 'cos-js-sdk-v5'
     import uploadCloud from '../components/upload/uploadCloud'
+
     export default {
         components: {
             uploadCloud

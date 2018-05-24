@@ -30,12 +30,15 @@
 </template>
 
 <script>
-    import COS from 'cos-js-sdk-v5';
+    import {oneOf, MD5} from '../../libs/utils';
+    import Up from '../cloud/tencet';
+
+
     export default {
         name: "uploadCloud",
         data(){
           return {
-              files : []
+              files : {}
           }
         },
         methods: {
@@ -56,13 +59,35 @@
                 }*/
             },
             uploadFiles(files) {
-                console.log(files);
-                return
+                for (var i=0;i<files.length; i++) {
+                    var file = files[i]
+                    console.log(file);
+                    let fileMD5 = MD5(file);
+                    if (this.files[fileMD5]) {
+                        alert(file.name + '已经上传');
+                        continue;
+                    }
 
-                /*var reader = new FileReader();//新建一个FileReader
-                reader.readAsText(files[0], "UTF-8");//读取文件
-                reader.onload = function(evt){ //读取完文件之后会回来这里
-                    var fileString = evt.target.result; // 读取文件内容*/
+                    var fix = this.getFixByType(file.type)
+                    if (fix == '') {
+                        alert(file.name + '文件类型不支持');
+                        continue;
+                    }
+
+                    var obj = {
+                        file : file,
+                        progress : 0,
+                        fileMD5 : fileMD5,
+                        key : fileMD5 + '.' + fix,
+                    }
+                    this.files[fileMD5] = obj
+
+                    Up.upload(obj.key, obj.file, function (res) {
+                        console.log(11111);
+                        console.log(res);
+                    })
+                }
+
                 /**
                  *
                  secret_id = AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk
@@ -72,27 +97,34 @@
 
                  * @type {*|COS}
                  */
-                var cos = new COS({
-                    SecretId: 'AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk',
-                    SecretKey: '55rPiARTHuKWWHrEMUUHp9LF0ZzCD2fA',
-                    FileParallelLimit: 6,// 	同一个实例下上传的文件并发数，默认值 3 	Number 	否
-                    ChunkParallelLimit : 6, // 	同一个上传文件的分片并发数，默认值 3 	Number 	否
-                    ChunkSize :  1048576, //	分片上传时，每片的大小字节数，默认值 1048576 (1MB) 	Number 	否
-                    ProgressInterval : 1000, // 上传进度的回调方法 onProgress 的回调频率，单位 ms ，默认值 1000
-                });
-                console.log(files[0]);
-                cos.putObject({
-                    Bucket: 'img-1256134197', /* 必须 */
-                    Region: 'ap-guangzhou',    /* 必须 */
-                    Key: 'test.jpg',              /* 必须 */
-                    //StorageClass: 'STANDARD',
-                    Body: files[0], // 上传文件对象
-                    onProgress: function(progressData) {
-                        console.log(JSON.stringify(progressData));
+
+            },
+            readImgFile(file){
+                let img = '';
+                let reader = new FileReader();//新建一个FileReader
+                reader.readAsDataURL(file);//读取文件
+                reader.onload = function() {
+                    img = this.result;
+                }
+                return img;
+            },
+            //根据文件类型获取后缀
+            getFixByType(type) {
+                const  Mimes = {
+                    'jpg' :	['image/jpeg', 'image/pjpeg', ],
+                    'png' : ['image/png',  'image/x-png'],
+                    'gif' : ['image/gif'],
+                    'ico' : ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon'],
+                    'bmp' : ['image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap'],
+                }
+                var fix = '';
+                for (let _fix in Mimes) {
+                    if (oneOf(type, Mimes[_fix])) {
+                        fix = _fix;
+                        break;
                     }
-                }, function(err, data) {
-                    console.log(err || data);
-                });
+                }
+                return fix;
             }
         }
     }
