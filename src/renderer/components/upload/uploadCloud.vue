@@ -7,18 +7,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12" v-for="item in upList">
                 <div class="row">
                     <div class="col-md-3 col-sm-3 col-xs-3">
-                        <div class="thumbnail"><img src="http://img.istimer.com/0.jpg"></div>
+                        <div class="thumbnail"><img :src="item['result']"></div>
                     </div>
                     <div class="col-md-9 col-sm-9 col-xs-9">
                         <div>
-                            上传成功，复制地址
+                            上传成功
                         </div>
                         <div class="progress">
-                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
-                                1%
+                            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" :style="'width:'+item.process.percent*100+'%;'">
+                                <!--{{item.process.percent*100}}%-->
+                                {{item.process.loaded}}/{{item.process.total}} -- {{item.process.speed}}
                             </div>
                         </div>
                     </div>
@@ -32,13 +33,15 @@
 <script>
     import {oneOf, MD5} from '../../libs/utils';
     import Up from '../cloud/tencet';
+    import swal from 'sweetalert';
 
 
     export default {
         name: "uploadCloud",
         data(){
           return {
-              files : {}
+              upList : [],
+              keys : [],
           }
         },
         methods: {
@@ -61,10 +64,9 @@
             uploadFiles(files) {
                 for (var i=0;i<files.length; i++) {
                     var file = files[i]
-                    var _this = this;
-                    console.log(file);
-                    let fileMD5 = MD5(file);
-                    if (this.files[fileMD5]) {
+
+                    let uid = MD5(file.path);
+                    if (oneOf(uid, this.keys)) {
                         alert(file.name + '已经上传');
                         continue;
                     }
@@ -74,18 +76,34 @@
                         alert(file.name + '文件类型不支持');
                         continue;
                     }
+                    file.uid = uid;
 
-                    var obj = {
+                    const obj = {
                         file : file,
-                        progress : {},
                         succ : 0,
-                        fileMD5 : fileMD5,
-                        key : fileMD5 + '.' + fix,
+                        uid : uid,
+                        key : uid + '.' + fix,
+                        process : {loaded: 0, total: 0, speed: 0, percent: 0 },
+                        result : ''
                     }
-                    _this.files[fileMD5] = obj
+
+                    this.upList.unshift(obj)
+                    this.keys.unshift(uid)
+
+                    let reader = new FileReader();//新建一个FileReader
+                    reader.readAsDataURL(file);//读取文件
+                    reader.onload = function() {
+                        obj.result = this.result;
+                    }
 
                     Up.upload(obj.key, obj.file, function (res) {
-                        _this.files[fileMD5]['progress'] = res;
+                        obj.process = res;
+                    }, function (err, data) {
+                        if (err) {
+                            obj.succ = -1;
+                        } else {
+                            obj.succ = 1;
+                        }
                     })
                 }
 

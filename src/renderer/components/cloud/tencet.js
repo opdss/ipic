@@ -51,7 +51,7 @@ const cos = new COS({
     ProgressInterval: 1000, // 上传进度的回调方法 onProgress 的回调频率，单位 ms ，默认值 1000
 });
 
-function errFunc(err, data) {
+function _errFunc(err, data) {
     if(err) {
         console.log(err);
     } else {
@@ -59,7 +59,7 @@ function errFunc(err, data) {
     }
 }
 
-function upload(key, file, onProgress) {
+function upload(key, file, onProgress, errFunc) {
     cos.putObject({
         Bucket: config['Bucket'] || 'img-1256134197', /* 必须 */
         Region: config['Region'] || 'ap-guangzhou', /* 必须 */
@@ -74,14 +74,14 @@ function upload(key, file, onProgress) {
             console.log('tencet -- upload');
             onProgress ? onProgress(progressData) : console.log(progressData);
         }
-    }, errFunc);
+    }, errFunc || _errFunc);
 }
 
 /**
  * 当keys为数组时，认为批量删除
  * @param keys
  */
-function del(keys) {
+function del(keys, errFunc) {
     if (typeOf(keys) == 'array') {
         var objs = [];
         for (key in keys) {
@@ -93,13 +93,13 @@ function del(keys) {
             Region: config['Region'] || 'ap-guangzhou', /* 必须 */
             //Quiet : 'BOOLEAN_VALUE',                        /* 非必须 */
             Objects :  objs
-        }, errFunc);
+        }, errFunc || _errFunc);
     } else {
         cos.deleteObject({
             Bucket: config['Bucket'] || 'img-1256134197', /* 必须 */
             Region: config['Region'] || 'ap-guangzhou', /* 必须 */
             Key: key,
-        }, errFunc);
+        }, errFunc || _errFunc);
     }
 }
 
