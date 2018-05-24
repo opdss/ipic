@@ -18,7 +18,7 @@
                         </div>
                         <div class="progress">
                             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="min-width: 2em;">
-                                0%
+                                1%
                             </div>
                         </div>
                     </div>
@@ -30,10 +30,17 @@
 </template>
 
 <script>
-    import COS from 'cos-js-sdk-v5';
+    import {oneOf, MD5} from '../../libs/utils';
+    import Up from '../cloud/tencet';
+
+
     export default {
         name: "uploadCloud",
-
+        data(){
+          return {
+              files : {}
+          }
+        },
         methods: {
             handleChange(e) {
                 console.log(e);
@@ -52,37 +59,63 @@
                 }*/
             },
             uploadFiles(files) {
-                console.log(files);
-                /**
-                 *
-                 secret_id = AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk
-                 secret_key = 55rPiARTHuKWWHrEMUUHp9LF0ZzCD2fA
-                 bucket = bak-1256134197
-                 region = ap-guangzhou
-
-                 * @type {*|COS}
-                 */
-                var cos = new COS({
-                    SecretId: 'AKIDBBxa2FZwRhiX7SFMxJSMJ6mFZkhSsTfk',
-                    SecretKey: '55rPiARTHuKWWHrEMUUHp9LF0ZzCD2fA',
-                    FileParallelLimit: 6,// 	同一个实例下上传的文件并发数，默认值 3 	Number 	否
-                    ChunkParallelLimit : 6, // 	同一个上传文件的分片并发数，默认值 3 	Number 	否
-                    ChunkSize :  1048576, //	分片上传时，每片的大小字节数，默认值 1048576 (1MB) 	Number 	否
-                    ProgressInterval : 1000, // 上传进度的回调方法 onProgress 的回调频率，单位 ms ，默认值 1000
-                });
-                console.log(files[0]);
-                cos.putObject({
-                    Bucket: 'img-1256134197', /* 必须 */
-                    Region: 'ap-guangzhou',    /* 必须 */
-                    Key: 'test.jpg',              /* 必须 */
-                    //StorageClass: 'STANDARD',
-                    Body: files[0], // 上传文件对象
-                    onProgress: function(progressData) {
-                        console.log(JSON.stringify(progressData));
+                for (var i=0;i<files.length; i++) {
+                    var file = files[i]
+                    var _this = this;
+                    console.log(file);
+                    let fileMD5 = MD5(file);
+                    if (this.files[fileMD5]) {
+                        alert(file.name + '已经上传');
+                        continue;
                     }
-                }, function(err, data) {
-                    console.log(err || data);
-                });
+
+                    var fix = this.getFixByType(file.type)
+                    if (fix == '') {
+                        alert(file.name + '文件类型不支持');
+                        continue;
+                    }
+
+                    var obj = {
+                        file : file,
+                        progress : {},
+                        succ : 0,
+                        fileMD5 : fileMD5,
+                        key : fileMD5 + '.' + fix,
+                    }
+                    _this.files[fileMD5] = obj
+
+                    Up.upload(obj.key, obj.file, function (res) {
+                        _this.files[fileMD5]['progress'] = res;
+                    })
+                }
+
+            },
+            readImgFile(file){
+                let img = '';
+                let reader = new FileReader();//新建一个FileReader
+                reader.readAsDataURL(file);//读取文件
+                reader.onload = function() {
+                    img = this.result;
+                }
+                return img;
+            },
+            //根据文件类型获取后缀
+            getFixByType(type) {
+                const  Mimes = {
+                    'jpg' :	['image/jpeg', 'image/pjpeg', ],
+                    'png' : ['image/png',  'image/x-png'],
+                    'gif' : ['image/gif'],
+                    'ico' : ['image/x-icon', 'image/x-ico', 'image/vnd.microsoft.icon'],
+                    'bmp' : ['image/bmp', 'image/x-bmp', 'image/x-bitmap', 'image/x-xbitmap', 'image/x-win-bitmap', 'image/x-windows-bmp', 'image/ms-bmp', 'image/x-ms-bmp', 'application/bmp', 'application/x-bmp', 'application/x-win-bitmap'],
+                }
+                var fix = '';
+                for (let _fix in Mimes) {
+                    if (oneOf(type, Mimes[_fix])) {
+                        fix = _fix;
+                        break;
+                    }
+                }
+                return fix;
             }
         }
     }

@@ -93,7 +93,7 @@ export function warnProp(component, prop, correctType, wrongType) {
     console.error(`[iView warn]: Invalid prop: type check failed for prop ${prop}. Expected ${correctType}, got ${wrongType}. (found in component: ${component})`);    // eslint-disable-line
 }
 
-function typeOf(obj) {
+export function typeOf(obj) {
     const toString = Object.prototype.toString;
     const map = {
         '[object Boolean]'  : 'boolean',
@@ -108,6 +108,18 @@ function typeOf(obj) {
         '[object Object]'   : 'object'
     };
     return map[toString.call(obj)];
+}
+
+export function MD5(data) {
+    let crypto=require('crypto');
+    let _md5=crypto.createHash("md5");
+    if (oneOf(typeOf(data), ['object', 'array'])) {
+        data = JSON.stringify(data);
+    } else {
+        data = data.toString();
+    }
+    _md5.update(data);
+    return _md5.digest('hex');
 }
 
 // deepCopy
