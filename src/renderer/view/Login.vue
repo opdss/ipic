@@ -6,12 +6,6 @@
                 <h3 class="text-center">腾讯云账户</h3>
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label for="AppId" class="col-sm-2 control-label">AppId</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="AppId" v-model="tencet.SecretId" placeholder="AppId">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label for="SecretId" class="col-sm-2 control-label">SecretId</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="SecretId" v-model="tencet.SecretId" placeholder="SecretId">
@@ -48,6 +42,7 @@
 
 <script>
     import Cfg from '../libs/config';
+    import swal from 'sweetalert';
 
     export default {
         name: "login",
@@ -64,7 +59,14 @@
         methods: {
             tencetSave (e) {
                 Cfg('cloud').set('tencet', this.tencet)
+                swal('保存成功！');
                 e.preventDefault();
+            }
+        },
+        created() {
+            var cfg = Cfg('cloud').get('tencet')
+            if (cfg) {
+                this.tencet = cfg
             }
         }
     }

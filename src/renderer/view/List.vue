@@ -5,7 +5,7 @@
                 <span><input type="checkbox" :checked="checkPic.length == tableData.length" @click="checkAll"> 全选</span>
                 <button class="btn btn-success">下载</button>
                 <button class="btn btn-success">删除</button>
-                <button class="btn btn-success">打包下载</button>
+                <button class="btn btn-success">下载</button>
             </div>
         </div>
         <br/>
@@ -16,7 +16,7 @@
                     <label class="img-title">
                         <input type="checkbox" :checked="oneOf(item.key, checkPic)" @click="checkOne(item.key)"/>
                         <span class="glyphicon glyphicon-copy act-icon" title="复制图片地址" @click="copy($event, item)"></span>
-                        <span class="glyphicon glyphicon-trash act-icon" title="删除该图片" @click="remove($event, item, index)"></span>
+                        <span class="glyphicon glyphicon-trash act-icon" title="删除该图片" @click="remove($event, item)"></span>
                     </label>
                 </div>
             </div>
@@ -26,10 +26,11 @@
 </template>
 
 <script>
-    import {oneOf} from '../libs/utils';
+    import {oneOf, removeArrByField} from '../libs/utils';
     import DB from '../libs/fileDB';
     import swal from 'sweetalert';
     import bigPic from '../components/BigPic';
+    import Cloud from '../components/cloud';
 
     export default {
         name: "list",
@@ -86,13 +87,19 @@
                 e.preventDefault();
             },
             //删除
-            remove(e, item, index) {
-                console.log(item)
-                console.log(index)
-                this.picDB.remove(item._id);
-                //this.tableData.splice(index, 1);
-                this.tableData = this.picDB.all();
-                alert('准备删除这个地址：'+ item.url);
+            remove(e, item) {
+                var _this = this;
+                Cloud.delete(item.key, function (err, data) {
+                    if (!err) {
+                        //删除数据库
+                        _this.picDB.remove(item._id);
+                        //移除当前列表
+                        _this.tableData = removeArrByField(_this.tableData, '_id', item._id);
+                    }
+                });
+                e.preventDefault();
+            },
+            removeMany(e) {
                 e.preventDefault();
             }
         },

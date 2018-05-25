@@ -10,8 +10,55 @@ export function oneOf (value, validList) {
     return false;
 }
 
+export function fmtSize (size) {
+    size = parseInt(size, 10)
+    var fix = ['Byte', 'KB', 'MB', 'GB', 'TB'];
+    var idx = 0;
+    while (size > 1024 && idx < fix.length) {
+        size = size/1024
+        idx++;
+    }
+    return size.toFixed(2).toString() + fix[idx]
+}
+
+export function fmtTime(timestamp, showMs) {
+    var date = timestamp && typeof timestamp == 'number' ? new Date(timestamp) : typeof timestamp == 'object' ? timestamp : new Date();
+    var s1 = "-";
+    var s2 = ":";
+    var pad = function (num) {
+        return num < 10 ? "0" + num.toString() : num;
+    }
+    return date.getFullYear()
+        + s1 + pad(date.getMonth() + 1)
+        + s1 + pad(date.getDate())
+        + " "
+        + pad(date.getHours())
+        + s2 + pad(date.getMinutes())
+        + s2 + pad(date.getSeconds())
+        + (showMs ? '.' + date.getMilliseconds() : '');
+}
+
 export function camelcaseToHyphen (str) {
     return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+export function removeArrByField(arr, field, data) {
+    if (arr.length == 0) {
+        return arr;
+    }
+    for (let i=0; i<arr.length; i++) {
+        if (field == '_id' && typeOf(data) == 'array') {
+            if (arr[i][field] &&  oneOf(arr[i][field], data)) {
+                arr.splice(i, 1)
+            }
+        } else {
+            if (arr[i][field] && arr[i][field] == data) {
+                arr.splice(i, 1)
+                break;
+            }
+        }
+    }
+    return arr;
 }
 
 // For Modal scrollBar hidden

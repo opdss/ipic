@@ -1,6 +1,7 @@
 
 //path.sep
 //返回对应平台下的文件夹分隔符，win下为'\'，*nix下为'/'
+import {removeArrByField} from '../libs/utils';
 
 var objs = {};
 
@@ -33,7 +34,7 @@ const Queue = function (file) {
         data['_id'] = genQid(data);
         let res = arr.push(data);
         this._wirte(arr);
-        return res;
+        return data['_id'];
     }
     //增加数组的第一个元素（入栈）。
     obj.unshift = function (data) {
@@ -41,7 +42,7 @@ const Queue = function (file) {
         data['_id'] = genQid(data);
         let res = arr.unshift(data);
         this._wirte(arr);
-        return res;
+        return data['_id'];
     }
 
     //删除数组的第一个元素（出栈）。
@@ -79,15 +80,8 @@ const Queue = function (file) {
 
     obj.remove = function (id) {
         var data = this._read();
-        if (data.length > 0) {
-            for(var i=0; i<data.length; i++) {
-                if (data[i]['_id'] == id) {
-                    data.splice(i, 1);
-                    this._wirte(data);
-                    break;
-                }
-            }
-        }
+        data = removeArrByField(data, '_id', id)
+        this._wirte(data);
         return true;
     }
 
