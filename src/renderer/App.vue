@@ -43,7 +43,7 @@
                                 <ul class="dropdown-menu">
                                     <li><a >关于iPic</a></li>
                                     <li><a>建议</a></li>
-                                    <li><a>大赏</a></li>
+                                    <li><a>打赏</a></li>
                                 </ul>
                             </li>
                         </ul>

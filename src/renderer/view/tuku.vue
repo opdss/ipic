@@ -21,7 +21,6 @@
                 </div>
             </div>
         </div>
-        <!--<big-pic :src="tableData[0].url"></big-pic>-->
     </div>
 </template>
 
@@ -29,13 +28,12 @@
     import {oneOf, removeArrByField} from '../libs/utils';
     import DB from '../libs/fileDB';
     import swal from 'sweetalert';
-    import bigPic from '../components/BigPic';
     import Cloud from '../components/cloud';
 
     export default {
-        name: "list",
+        name: "tuku",
         components : {
-            bigPic
+            //bigPic
         },
         data() {
             return {
@@ -50,7 +48,7 @@
             },
             //展示
             showPic(item){
-                alert('准备展示这个地址：'+item.url);
+                $('document').append('<div>gawegawe</div>');
                 console.log(item);
             },
             //单选
@@ -101,7 +99,7 @@
             },
             removeMany(e) {
                 e.preventDefault();
-            }
+            },
         },
         created() {
             this.getData();
