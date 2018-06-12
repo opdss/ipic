@@ -18,10 +18,10 @@
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav">
-                            <li class="active"><a @click="open('upload')">开始上传</a></li>
-                            <li><a @click="open('login')">登陆</a></li>
-                            <li><a @click="open('tuku')">相册</a></li>
-                            <li><a @click="open('tuku')">系统设置</a></li>
+                            <li :class="currentTab == 'upload' ? 'active' : ''"><a @click="open('upload')">开始上传</a></li>
+                            <li :class="currentTab == 'login' ? 'active' : ''"><a @click="open('login')">腾讯云设置</a></li>
+                            <li :class="currentTab == 'tuku' ? 'active' : ''"><a @click="open('tuku')">图库</a></li>
+                            <!--<li><a @click="open('tuku')">系统设置</a></li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                    aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
@@ -34,7 +34,7 @@
                                     <li role="separator" class="divider"></li>
                                     <li><a href="#">One more separated link</a></li>
                                 </ul>
-                            </li>
+                            </li>-->
                         </ul>
 
                         <ul class="nav navbar-nav navbar-right">
@@ -60,8 +60,14 @@
 <script>
     export default {
         name: 'ipic',
+        data() {
+            return {
+                currentTab : 'upload',
+            }
+        },
         methods: {
             open (link) {
+                this.currentTab = link;
                 this.$router.push({name: link})
             }
         }
@@ -69,6 +75,5 @@
 </script>
 
 <style>
-    /* CSS */
-
+    
 </style>

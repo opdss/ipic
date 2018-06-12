@@ -10,6 +10,11 @@ export default new Router({
             name: 'landing-page',
             component: require('@/components/LandingPage').default
         },
+        /*{
+            path: '/',
+            name: 'upload',
+            component: require('@/view/upload').default
+        },*/
         {
             path: '/upload',
             name: 'upload',

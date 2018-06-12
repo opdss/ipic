@@ -3,8 +3,6 @@
 //返回对应平台下的文件夹分隔符，win下为'\'，*nix下为'/'
 import {removeArrByField} from '../libs/utils';
 
-var objs = {};
-
 var fs=require('fs');
 var path=require('path');
 var {remote} = require('electron');
@@ -15,6 +13,8 @@ const genQid = function (data) {
     md5.update(JSON.stringify(data))
     return md5.digest('hex');
 }
+
+var objs = {};
 
 const Queue = function (file) {
 

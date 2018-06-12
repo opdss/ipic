@@ -30,6 +30,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="domain" class="col-sm-2 control-label">绑定域名</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="domain" v-model="tencet.domain" placeholder="domain">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-success col-sm-12" @click="tencetSave">OK</button>
                         </div>
@@ -52,7 +58,8 @@
                     SecretId : '',
                     SecretKey : '',
                     Bucket : '',
-                    Region : ''
+                    Region : '',
+                    domain : '',
                 }
             }
         },
